@@ -38,7 +38,7 @@
     }).addTo(map);
 
     // 3. CARICA IL TUO FILE GPX (QUI DEVI INCOLLARE IL TUO LINK!)
-    var gpxUrl = 'https://raw.githubusercontent.com/danbisceglia/maddalenatest/6369231942a0807b036a165f9a01441c3aeee4dc/IterarioAnew'; 
+    var gpxUrl = 'https://raw.githubusercontent.com/danbisceglia/maddalenatest/refs/heads/main/ItinerarioA.gpx'; 
 
     new L.GPX(gpxUrl, {
         async: true,
@@ -70,3 +70,4 @@ console.log("Distanza: " + (e.target.get_distance() / 1000).toFixed(2) + " km");
 </body>
 
 </html>
+

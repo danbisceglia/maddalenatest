@@ -38,24 +38,27 @@
     }).addTo(map);
 
     // 3. CARICA IL TUO FILE GPX (QUI DEVI INCOLLARE IL TUO LINK!)
-    var gpxUrl = 'https://raw.githubusercontent.com/danbisceglia/maddalenatest/538e383c225ee2646f4060e23a3bf4b356c79d3d/ItinerarioA.gpx'; 
+    var gpxUrl = 'https://raw.githubusercontent.com/danbisceglia/maddalenatest/6369231942a0807b036a165f9a01441c3aeee4dc/IterarioAnew'; 
 
     new L.GPX(gpxUrl, {
         async: true,
-        marker_options: {
-            startIconUrl: 'https://cdn.jsdelivr.net/gh/mpetazzoni/leaflet-gpx@master/pin-icon-start.png',
-            endIconUrl: 'https://cdn.jsdelivr.net/gh/mpetazzoni/leaflet-gpx@master/pin-icon-end.png',
-            shadowUrl: 'https://cdn.jsdelivr.net/gh/mpetazzoni/leaflet-gpx@master/pin-shadow.png'
-        },
-        polyline_options: {
-            color: '#e63946', // Rosso per il sentiero
-            weight: 5,
-            opacity: 0.8
+        marker_options:{
+            startIconUrl: null,
+            endIconUrl: null,
+            shadowUrl: null,
+            wptIconUrls: {}},
+polyline_options: {
+            color: '#c0392b', // Un rosso scuro, più elegante
+            weight: 6,        // Linea più spessa per il mobile
+            opacity: 0.9,
+            lineJoin: 'round' // Arrotonda gli angoli della traccia
         }
-    }).on('loaded', function(e) {
+  }).on('loaded', function(e) {
         map.fitBounds(e.target.getBounds()); // Centra la mappa sulla traccia
     }).addTo(map);
-
+    
+console.log("Distanza: " + (e.target.get_distance() / 1000).toFixed(2) + " km");
+    }).addTo(map);
     // 4. Funzione GPS per l'utente
     map.locate({setView: false, watch: true});
     map.on('locationfound', function(e) {
@@ -65,4 +68,5 @@
 </script>
 
 </body>
+
 </html>

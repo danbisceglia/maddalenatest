@@ -2,8 +2,8 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mappa Sentiero 1 - Parco delle Colline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Mappa Sentiero 1 - Brescia</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -11,44 +11,71 @@
     <script src="Percorso1_GottardoRoccodiVeloRifugioMompiano_unito_2.js"></script>
 
     <style>
-        body { margin: 0; padding: 0; }
+        body { margin: 0; padding: 0; font-family: sans-serif; }
         #map { height: 100vh; width: 100vw; }
+        
         .header {
             position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-            z-index: 1000; background: white; padding: 10px; border-radius: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-family: sans-serif;
+            z-index: 1000; background: white; padding: 12px 25px; border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-align: center;
+            border: 2px solid #c0392b;
+        }
+        .header h1 { margin: 0; font-size: 14px; color: #2c3e50; text-transform: uppercase; }
+        
+        .gps-btn {
+            position: absolute; bottom: 20px; right: 20px; z-index: 1000;
+            background: #c0392b; color: white; border: none; width: 50px; height: 50px;
+            border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
 
-    <div class="header"><b>Sentiero 1: Gottardo - Rif. Mompiano</b></div>
+    <div class="header">
+        <h1>Sentiero 1: Gottardo - Rif. Mompiano</h1>
+    </div>
+
+    <button class="gps-btn" onclick="geoLoc()">📍</button>
+
     <div id="map"></div>
 
     <script>
-        var map = L.map('map').setView([45.55, 10.26], 13);
+        // 1. Inizializza la mappa
+        var map = L.map('map', { zoomControl: false }).setView([45.55, 10.26], 14);
+        L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
+        // 2. Sfondo Mappa (OpenStreetMap istituzionale)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        // USARE LA VARIABILE CONTENUTA NEL TUO FILE .JS
-        // Il nome della variabile deve essere identico a quello nel file
+        // 3. CARICA LA TRACCIA DAL TUO FILE .JS
+        // La variabile json_Percorso1_... è definita dentro il tuo file .js
         var tracciaData = json_Percorso1_GottardoRoccodiVeloRifugioMompiano_unito_2;
 
-        var stratoGeoJSON = L.geoJSON(tracciaData, {
+        var layerSentiero = L.geoJSON(tracciaData, {
             style: function (feature) {
                 return {
-                    color: '#c0392b', // Rosso Brescia
-                    weight: 5,
-                    opacity: 0.8,
-                    fillOpacity: 0 // QUESTO TOGLIE LA LINEA DI CHIUSURA
+                    color: '#c0392b', // Rosso scuro professionale
+                    weight: 6,        // Spessore per mobile
+                    opacity: 0.9,
+                    fillOpacity: 0    // FONDAMENTALE: evita la chiusura della linea
                 };
             }
         }).addTo(map);
 
-        // Centra automaticamente la mappa sulla traccia
-        map.fitBounds(stratoGeoJSON.getBounds());
+        // Centra la mappa sulla traccia automaticamente
+        map.fitBounds(layerSentiero.getBounds());
+
+        // 4. Funzione GPS
+        function geoLoc() {
+            map.locate({setView: true, maxZoom: 16});
+        }
+
+        map.on('locationfound', function(e) {
+            L.circleMarker(e.latlng, {radius: 7, color: '#3498db', fillOpacity: 1}).addTo(map)
+                .bindPopup("Sei qui").openPopup();
+        });
     </script>
 </body>
 </html>
